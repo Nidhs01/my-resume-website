@@ -1,18 +1,211 @@
-# 1. Clone your repository
-git clone https://github.com/Nichs01/myy-resume-website.git
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to your Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://i.pinimg.com/736x/fc/55/d1/fc55d1cfc7caa4ea6e29596531cb52b2.jpg') no-repeat center center/cover;
+            margin: 0;
+            position: relative;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            width: 300px;
+        }
+        .login-container h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #0c0b0b;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #431f1f;
+            color: rgb(221, 212, 212);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .login-container button:hover {
+            background: #050505;
+        }
+        .create-account {
+            margin-top: 15px;
+            color: rgb(20, 20, 20);
+        }
+        .create-account a {
+            color: #0e0774;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .welcome-title {
+            position: absolute;
+            top: 20px;
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .logout-button {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #431f1f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .post-login-container {
+            display: none;
+            text-align: center;
+        }
+        .resume-toolbox {
+            background: #431f1f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-title">Welcome to my website - SRINIDHI</div>
+    <button class="logout-button" onclick="logout()">Logout</button>
 
-# 2. Navigate into the folder
-cd myy-resume-website
+    <!-- Login Container -->
+    <div class="login-container" id="login-container">
+        <h2>Login to your Account</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p class="create-account">Don't have an account? <a onclick="showCreateAccount()">Create one</a></p>
+    </div>
 
-# 3. COPY YOUR FILES HERE (e.g., drag-and-drop or use terminal commands)
-# Example for Windows:
-copy "C:\Users\Alawu\Downloads\WEBSITE\*" .
+    <!-- Create Account Container -->
+    <div class="login-container" id="create-account-container" style="display: none;">
+        <h2>Create Account</h2>
+        <input type="text" id="new-username" placeholder="Choose a Username">
+        <input type="password" id="new-password" placeholder="Choose a Password">
+        <button onclick="createAccount()">Create Account</button>
+        <p class="create-account"><a onclick="showLogin()">Back to Login</a></p>
+    </div>
 
-# 4. Stage changes
-git add .
+    <!-- Post-Login Container -->
+    <div class="post-login-container" id="post-login-container">
+        <button class="resume-toolbox" onclick="openResume()">My Resume</button>
+    </div>
 
-# 5. Commit with message
-git commit -m "Initial commit"
+    <!-- Logout Message Container -->
+    <div class="login-container" id="logout-message-container" style="display: none;">
+        <h2>Thank you for visiting my website!</h2>
+        <p class="create-account">Click <a onclick="returnToLogin()">here</a> to login again.</p>
+    </div>
 
-# 6. Push to GitHub
-git push
+    <script>
+        function createAccount() {
+            const newUsername = document.getElementById("new-username").value.trim();
+            const newPassword = document.getElementById("new-password").value.trim();
+            
+            if (newUsername && newPassword) {
+                let users = JSON.parse(localStorage.getItem("users")) || {};
+                
+                if (users[newUsername]) {
+                    alert("Username already exists! Choose a different one.");
+                    return;
+                }
+                
+                users[newUsername] = newPassword;
+                localStorage.setItem("users", JSON.stringify(users));
+                alert("Account created successfully! You can now log in.");
+                showLogin();
+            } else {
+                alert("Please enter a username and password.");
+            }
+        }
+
+        function login() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            
+            let users = JSON.parse(localStorage.getItem("users")) || {};
+            
+            if (users[username] && users[username] === password) {
+                localStorage.setItem("loggedInUser", username);
+                document.getElementById("login-container").style.display = 'none';
+                document.getElementById("post-login-container").style.display = 'block';
+                document.querySelector('.logout-button').style.display = 'block';
+            } else {
+                alert("Invalid credentials. Try again!");
+            }
+        }
+
+        function showCreateAccount() {
+            document.getElementById("login-container").style.display = 'none';
+            document.getElementById("create-account-container").style.display = "block";
+        }
+
+        function showLogin() {
+            document.getElementById("create-account-container").style.display = "none";
+            document.getElementById("login-container").style.display = 'block';
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            document.getElementById("login-container").style.display = 'none';
+            document.getElementById("create-account-container").style.display = 'none';
+            document.getElementById("post-login-container").style.display = 'none';
+            document.querySelector('.welcome-title').style.display = 'none';
+            document.querySelector('.logout-button').style.display = 'none';
+            document.getElementById("logout-message-container").style.display = 'block';
+        }
+
+        function returnToLogin() {
+            document.getElementById("logout-message-container").style.display = 'none';
+            document.querySelector('.welcome-title').style.display = 'block';
+            document.getElementById("login-container").style.display = 'block';
+        }
+
+        function openResume() {
+            window.open("https://www.pdffiller.com/jsfiller-desk13/?traceparent=00-9c0987fcbea528620b5b7e67e2845fad-6de89aec9787f689-01&flat_pdf_quality=high&mode=link_to_fill&lang=en&et=l2f&projectId=1785973343&PAGE_REARRANGE_V2_MVP=true&richTextFormatting=true&isPageRearrangeV2MVP=true&jsf-page-rearrange-v2=true&jsf-dss-v2=true&jsf-redesign-full=true&act-notary-pro-integration=true&jsf-fake-edit-embedded=true&isSkipEditorLoadFrequency=true&jsf-desktop-ux-for-tablets=false&jsf-probability-70=true&jsf-socket-io=false&jsf-offline-mode=false&jsf-fake-edit-stream-editing=false&routeId=5e30fc04ab4aea1bae4d49472d08569c#7c269f1556644853a469b93126f0f861");
+        }
+
+        window.onload = function () {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("login-container").style.display = 'none';
+                document.getElementById("post-login-container").style.display = 'block';
+                document.querySelector('.logout-button').style.display = 'block';
+            } else {
+                document.querySelector('.logout-button').style.display = 'none';
+                document.getElementById("login-container").style.display = 'block';
+                document.getElementById("logout-message-container").style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
