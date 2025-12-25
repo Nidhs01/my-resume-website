@@ -14,5 +14,5 @@ A personal portfolio and resume website showcasing my skills, experience, and pr
 
 
 ## Live Demo 🚀
-[Visit Website](https://nidhs01.github.io/my-resume-website/) <!-- Update with your actual URL -->
+[Visit Website](http://127.0.0.1:5500/main.html) <!-- Update with your actual URL -->
 
